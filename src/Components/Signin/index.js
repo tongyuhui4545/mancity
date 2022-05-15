@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { CircularProgress } from "@mui/material";
 
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import app from "../../firebase";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -23,9 +25,25 @@ const SignIn = () => {
     onSubmit: (values) => {
       //go to server with field values
       setLoading(true);
-      console.log(values);
+      submitForm(values);
     },
   });
+
+  const submitForm = (values) => {
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, values.email, values.password)
+      .then(() => {
+        //show success toast
+        //redirect user to dashboard
+        console.log("the log-in is successful");
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        //show toasts
+        alert(error);
+      });
+  };
 
   return (
     <div className="container">
