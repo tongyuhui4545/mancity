@@ -3,10 +3,10 @@ import { CircularProgress } from "@mui/material";
 
 import { Navigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import app from "../../firebase";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { showToastSuccess, showToastError } from "../Utils/tools";
 
 const SignIn = () => {
   const [loading, setLoading] = useState(false);
@@ -34,14 +34,13 @@ const SignIn = () => {
     signInWithEmailAndPassword(auth, values.email, values.password)
       .then(() => {
         //show success toast
-        //redirect user to dashboard
-        console.log("the log-in is successful");
+        showToastSuccess("you are logged in!");
         setLoading(false);
       })
       .catch((error) => {
         setLoading(false);
         //show toasts
-        alert(error);
+        showToastError(error.message);
       });
   };
 
@@ -62,6 +61,7 @@ const SignIn = () => {
             <div className="error_label">{formik.errors.email}</div>
           ) : null}
           <input
+            placeholder="Enger Your Password"
             type="password"
             name="password"
             onChange={formik.handleChange}
